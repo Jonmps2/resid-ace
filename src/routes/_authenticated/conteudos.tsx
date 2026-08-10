@@ -1,14 +1,34 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/common/page-header";
+import { SectionCard } from "@/components/common/section-card";
 import { EmptyState, ErrorState, ListSkeleton } from "@/components/common/states";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { useMockData } from "@/hooks/use-mock-data";
-import { conteudos } from "@/lib/mock-data";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { createTopic, deleteTopic, listAreas, listTopics, queryKeys, updateTopic } from "@/lib/api";
+import { percent } from "@/lib/format";
+import type { Enums } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/conteudos")({
   head: () => ({
@@ -16,58 +36,226 @@ export const Route = createFileRoute("/_authenticated/conteudos")({
       { title: "Conteúdos — Residência Planner" },
       {
         name: "description",
-        content: "Organize as grandes áreas e tópicos do edital e acompanhe o progresso de cada conteúdo.",
+        content: "Organize o edital por grandes áreas e acompanhe o progresso de cada tópico.",
       },
       { property: "og:title", content: "Conteúdos — Residência Planner" },
-      { property: "og:description", content: "Acompanhe o progresso por área e tópico do edital." },
+      {
+        property: "og:description",
+        content: "Mapa do edital por áreas e tópicos com progresso de estudo.",
+      },
     ],
   }),
   component: Conteudos,
 });
 
+const statusLabels: Record<Enums<"topic_status">, string> = {
+  nao_iniciado: "Não iniciado",
+  em_andamento: "Em andamento",
+  concluido: "Concluído",
+  revisar: "Revisar",
+};
+
 function Conteudos() {
-  const { data, loading, error, retry } = useMockData(conteudos, 700);
+  const qc = useQueryClient();
+  const areas = useQuery({ queryKey: queryKeys.areas, queryFn: listAreas });
+  const topics = useQuery({ queryKey: queryKeys.topics, queryFn: listTopics });
+
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [areaId, setAreaId] = useState<string>("");
+  const [priority, setPriority] = useState<Enums<"topic_priority">>("P2");
+
+  const invalidate = () => void qc.invalidateQueries({ queryKey: queryKeys.topics });
+
+  const create = useMutation({
+    mutationFn: () =>
+      createTopic({ title, area_id: areaId || null, priority, status: "nao_iniciado" }),
+    onSuccess: () => {
+      invalidate();
+      setOpen(false);
+      setTitle("");
+      toast.success("Tópico adicionado");
+    },
+    onError: (e: Error) => toast.error("Erro ao salvar", { description: e.message }),
+  });
+
+  const setStatus = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: Enums<"topic_status"> }) =>
+      updateTopic(id, {
+        status,
+        completed_at: status === "concluido" ? new Date().toISOString() : null,
+      }),
+    onSuccess: () => {
+      invalidate();
+      toast.success("Tópico atualizado");
+    },
+    onError: (e: Error) => toast.error("Erro ao atualizar", { description: e.message }),
+  });
+
+  const remove = useMutation({
+    mutationFn: (id: string) => deleteTopic(id),
+    onSuccess: () => {
+      invalidate();
+      toast.success("Tópico removido");
+    },
+    onError: (e: Error) => toast.error("Erro ao remover", { description: e.message }),
+  });
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
         title="Conteúdos"
-        description="Áreas e tópicos do edital com progresso individual."
+        description="Seu edital dividido pelas cinco grandes áreas."
         action={
-          <Button className="rounded-xl" onClick={() => toast.info("Em breve", { description: "Cadastro de conteúdos." })}>
-            Novo conteúdo
-          </Button>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="rounded-xl">
+                <Plus className="h-4 w-4" /> Tópico
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="rounded-2xl">
+              <DialogHeader>
+                <DialogTitle>Novo tópico</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="topic-title">Título</Label>
+                  <Input
+                    id="topic-title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Ex.: Insuficiência cardíaca"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Área</Label>
+                  <Select value={areaId} onValueChange={setAreaId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a área" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(areas.data ?? []).map((a) => (
+                        <SelectItem key={a.id} value={a.id}>
+                          {a.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Prioridade</Label>
+                  <Select
+                    value={priority}
+                    onValueChange={(v) => setPriority(v as Enums<"topic_priority">)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(["P1", "P2", "P3", "P4"] as const).map((p) => (
+                        <SelectItem key={p} value={p}>
+                          {p}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  className="rounded-xl"
+                  disabled={!title.trim() || create.isPending}
+                  onClick={() => create.mutate()}
+                >
+                  {create.isPending ? "Salvando..." : "Salvar"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         }
       />
 
-      {loading && <ListSkeleton rows={5} />}
-      {error && <ErrorState onRetry={retry} />}
-      {data && data.length === 0 && (
-        <EmptyState
-          icon={BookOpen}
-          title="Nenhum conteúdo cadastrado"
-          description="Cadastre as áreas do edital para começar a acompanhar seu progresso."
+      {(areas.isLoading || topics.isLoading) && <ListSkeleton rows={5} />}
+      {(areas.isError || topics.isError) && (
+        <ErrorState
+          onRetry={() => {
+            void areas.refetch();
+            void topics.refetch();
+          }}
         />
       )}
-      {data && data.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {data.map((c) => (
-            <Card key={c.id} className="gap-0 rounded-2xl p-4 shadow-soft">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-                <div className="min-w-0">
-                  <p className="truncate font-display text-base font-semibold">{c.titulo}</p>
-                  <p className="truncate text-xs text-muted-foreground">{c.area}</p>
-                </div>
-                <span className="shrink-0 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary">
-                  {c.progresso}%
-                </span>
-              </div>
-              <Progress value={c.progresso} className="mt-4 h-2" />
-              <p className="mt-2 text-xs text-muted-foreground">
-                {c.topicosConcluidos} de {c.topicos} tópicos concluídos
-              </p>
-            </Card>
-          ))}
+
+      {areas.data && topics.data && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {areas.data.map((area) => {
+            const list = topics.data.filter((t) => t.area_id === area.id);
+            const done = list.filter((t) => t.status === "concluido").length;
+            return (
+              <SectionCard
+                key={area.id}
+                title={area.name}
+                description={`${done}/${list.length} tópicos concluídos`}
+              >
+                <Progress value={percent(done, list.length)} className="mb-4 h-2" />
+                {list.length === 0 ? (
+                  <EmptyState
+                    icon={BookOpen}
+                    title="Sem tópicos nesta área"
+                    description="Adicione tópicos do edital para acompanhar o progresso."
+                  />
+                ) : (
+                  <ul className="divide-y divide-border">
+                    {list.map((topic) => (
+                      <li
+                        key={topic.id}
+                        className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 py-2.5"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">{topic.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {topic.priority} · {statusLabels[topic.status]}
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1">
+                          <Select
+                            value={topic.status}
+                            onValueChange={(v) =>
+                              setStatus.mutate({
+                                id: topic.id,
+                                status: v as Enums<"topic_status">,
+                              })
+                            }
+                          >
+                            <SelectTrigger className="h-8 w-[9.5rem] text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {(
+                                Object.keys(statusLabels) as Array<Enums<"topic_status">>
+                              ).map((s) => (
+                                <SelectItem key={s} value={s}>
+                                  {statusLabels[s]}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Remover tópico"
+                            className="h-8 w-8 rounded-lg text-muted-foreground"
+                            onClick={() => remove.mutate(topic.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </SectionCard>
+            );
+          })}
         </div>
       )}
     </div>
