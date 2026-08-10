@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useMockData } from "@/hooks/use-mock-data";
 import { conteudos } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/conteudos")({
+export const Route = createFileRoute("/_authenticated/conteudos")({
   head: () => ({
     meta: [
       { title: "Conteúdos — Residência Planner" },

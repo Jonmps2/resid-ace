@@ -12,7 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { useMockData } from "@/hooks/use-mock-data";
 import { itensHoje, metas, resumoGeral } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Visão geral — Residência Planner" },

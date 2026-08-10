@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { useMockData } from "@/hooks/use-mock-data";
 import { planner } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/planner")({
+export const Route = createFileRoute("/_authenticated/planner")({
   head: () => ({
     meta: [
       { title: "Planner — Residência Planner" },

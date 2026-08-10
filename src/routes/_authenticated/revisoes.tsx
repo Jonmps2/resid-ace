@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useMockData } from "@/hooks/use-mock-data";
 import { revisoes } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/revisoes")({
+export const Route = createFileRoute("/_authenticated/revisoes")({
   head: () => ({
     meta: [
       { title: "Revisões — Residência Planner" },

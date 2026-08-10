@@ -9,50 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as ConteudosRouteImport } from './routes/conteudos'
-import { Route as MetasRouteImport } from './routes/metas'
-import { Route as PlannerRouteImport } from './routes/planner'
-import { Route as QuestoesRouteImport } from './routes/questoes'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as RevisoesRouteImport } from './routes/revisoes'
-import { Route as SessoesRouteImport } from './routes/sessoes'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedConteudosRouteImport } from './routes/_authenticated/conteudos'
+import { Route as AuthenticatedMetasRouteImport } from './routes/_authenticated/metas'
+import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
+import { Route as AuthenticatedQuestoesRouteImport } from './routes/_authenticated/questoes'
+import { Route as AuthenticatedRevisoesRouteImport } from './routes/_authenticated/revisoes'
+import { Route as AuthenticatedSessoesRouteImport } from './routes/_authenticated/sessoes'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
-  id: '/configuracoes',
-  path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConteudosRoute = ConteudosRouteImport.update({
-  id: '/conteudos',
-  path: '/conteudos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MetasRoute = MetasRouteImport.update({
-  id: '/metas',
-  path: '/metas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlannerRoute = PlannerRouteImport.update({
-  id: '/planner',
-  path: '/planner',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuestoesRoute = QuestoesRouteImport.update({
-  id: '/questoes',
-  path: '/questoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -60,155 +30,144 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RevisoesRoute = RevisoesRouteImport.update({
-  id: '/revisoes',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/_authenticated/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedConteudosRoute = AuthenticatedConteudosRouteImport.update({
+  id: '/_authenticated/conteudos',
+  path: '/conteudos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedMetasRoute = AuthenticatedMetasRouteImport.update({
+  id: '/_authenticated/metas',
+  path: '/metas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPlannerRoute = AuthenticatedPlannerRouteImport.update({
+  id: '/_authenticated/planner',
+  path: '/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedQuestoesRoute = AuthenticatedQuestoesRouteImport.update({
+  id: '/_authenticated/questoes',
+  path: '/questoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRevisoesRoute = AuthenticatedRevisoesRouteImport.update({
+  id: '/_authenticated/revisoes',
   path: '/revisoes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SessoesRoute = SessoesRouteImport.update({
-  id: '/sessoes',
+const AuthenticatedSessoesRoute = AuthenticatedSessoesRouteImport.update({
+  id: '/_authenticated/sessoes',
   path: '/sessoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/conteudos': typeof ConteudosRoute
-  '/metas': typeof MetasRoute
-  '/planner': typeof PlannerRoute
-  '/questoes': typeof QuestoesRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/revisoes': typeof RevisoesRoute
-  '/sessoes': typeof SessoesRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/conteudos': typeof AuthenticatedConteudosRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/planner': typeof AuthenticatedPlannerRoute
+  '/questoes': typeof AuthenticatedQuestoesRoute
+  '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/sessoes': typeof AuthenticatedSessoesRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/conteudos': typeof ConteudosRoute
-  '/metas': typeof MetasRoute
-  '/planner': typeof PlannerRoute
-  '/questoes': typeof QuestoesRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/revisoes': typeof RevisoesRoute
-  '/sessoes': typeof SessoesRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/conteudos': typeof AuthenticatedConteudosRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/planner': typeof AuthenticatedPlannerRoute
+  '/questoes': typeof AuthenticatedQuestoesRoute
+  '/revisoes': typeof AuthenticatedRevisoesRoute
+  '/sessoes': typeof AuthenticatedSessoesRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/conteudos': typeof ConteudosRoute
-  '/metas': typeof MetasRoute
-  '/planner': typeof PlannerRoute
-  '/questoes': typeof QuestoesRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/revisoes': typeof RevisoesRoute
-  '/sessoes': typeof SessoesRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/conteudos': typeof AuthenticatedConteudosRoute
+  '/_authenticated/metas': typeof AuthenticatedMetasRoute
+  '/_authenticated/planner': typeof AuthenticatedPlannerRoute
+  '/_authenticated/questoes': typeof AuthenticatedQuestoesRoute
+  '/_authenticated/revisoes': typeof AuthenticatedRevisoesRoute
+  '/_authenticated/sessoes': typeof AuthenticatedSessoesRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/auth'
+    | '/reset-password'
     | '/configuracoes'
     | '/conteudos'
     | '/metas'
     | '/planner'
     | '/questoes'
-    | '/reset-password'
     | '/revisoes'
     | '/sessoes'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/auth'
+    | '/reset-password'
     | '/configuracoes'
     | '/conteudos'
     | '/metas'
     | '/planner'
     | '/questoes'
-    | '/reset-password'
     | '/revisoes'
     | '/sessoes'
+    | '/'
   id:
     | '__root__'
-    | '/'
     | '/auth'
-    | '/configuracoes'
-    | '/conteudos'
-    | '/metas'
-    | '/planner'
-    | '/questoes'
     | '/reset-password'
-    | '/revisoes'
-    | '/sessoes'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/conteudos'
+    | '/_authenticated/metas'
+    | '/_authenticated/planner'
+    | '/_authenticated/questoes'
+    | '/_authenticated/revisoes'
+    | '/_authenticated/sessoes'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
-  ConfiguracoesRoute: typeof ConfiguracoesRoute
-  ConteudosRoute: typeof ConteudosRoute
-  MetasRoute: typeof MetasRoute
-  PlannerRoute: typeof PlannerRoute
-  QuestoesRoute: typeof QuestoesRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  RevisoesRoute: typeof RevisoesRoute
-  SessoesRoute: typeof SessoesRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedConteudosRoute: typeof AuthenticatedConteudosRoute
+  AuthenticatedMetasRoute: typeof AuthenticatedMetasRoute
+  AuthenticatedPlannerRoute: typeof AuthenticatedPlannerRoute
+  AuthenticatedQuestoesRoute: typeof AuthenticatedQuestoesRoute
+  AuthenticatedRevisoesRoute: typeof AuthenticatedRevisoesRoute
+  AuthenticatedSessoesRoute: typeof AuthenticatedSessoesRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/configuracoes': {
-      id: '/configuracoes'
-      path: '/configuracoes'
-      fullPath: '/configuracoes'
-      preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/conteudos': {
-      id: '/conteudos'
-      path: '/conteudos'
-      fullPath: '/conteudos'
-      preLoaderRoute: typeof ConteudosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/metas': {
-      id: '/metas'
-      path: '/metas'
-      fullPath: '/metas'
-      preLoaderRoute: typeof MetasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/planner': {
-      id: '/planner'
-      path: '/planner'
-      fullPath: '/planner'
-      preLoaderRoute: typeof PlannerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/questoes': {
-      id: '/questoes'
-      path: '/questoes'
-      fullPath: '/questoes'
-      preLoaderRoute: typeof QuestoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -218,34 +177,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/revisoes': {
-      id: '/revisoes'
-      path: '/revisoes'
-      fullPath: '/revisoes'
-      preLoaderRoute: typeof RevisoesRouteImport
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sessoes': {
-      id: '/sessoes'
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/conteudos': {
+      id: '/_authenticated/conteudos'
+      path: '/conteudos'
+      fullPath: '/conteudos'
+      preLoaderRoute: typeof AuthenticatedConteudosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/metas': {
+      id: '/_authenticated/metas'
+      path: '/metas'
+      fullPath: '/metas'
+      preLoaderRoute: typeof AuthenticatedMetasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/planner': {
+      id: '/_authenticated/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof AuthenticatedPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/questoes': {
+      id: '/_authenticated/questoes'
+      path: '/questoes'
+      fullPath: '/questoes'
+      preLoaderRoute: typeof AuthenticatedQuestoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/revisoes': {
+      id: '/_authenticated/revisoes'
+      path: '/revisoes'
+      fullPath: '/revisoes'
+      preLoaderRoute: typeof AuthenticatedRevisoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sessoes': {
+      id: '/_authenticated/sessoes'
       path: '/sessoes'
       fullPath: '/sessoes'
-      preLoaderRoute: typeof SessoesRouteImport
+      preLoaderRoute: typeof AuthenticatedSessoesRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
-  ConfiguracoesRoute: ConfiguracoesRoute,
-  ConteudosRoute: ConteudosRoute,
-  MetasRoute: MetasRoute,
-  PlannerRoute: PlannerRoute,
-  QuestoesRoute: QuestoesRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  RevisoesRoute: RevisoesRoute,
-  SessoesRoute: SessoesRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedConteudosRoute: AuthenticatedConteudosRoute,
+  AuthenticatedMetasRoute: AuthenticatedMetasRoute,
+  AuthenticatedPlannerRoute: AuthenticatedPlannerRoute,
+  AuthenticatedQuestoesRoute: AuthenticatedQuestoesRoute,
+  AuthenticatedRevisoesRoute: AuthenticatedRevisoesRoute,
+  AuthenticatedSessoesRoute: AuthenticatedSessoesRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

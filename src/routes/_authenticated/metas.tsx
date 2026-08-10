@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { useMockData } from "@/hooks/use-mock-data";
 import { desempenhoSemanal, metas } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/metas")({
+export const Route = createFileRoute("/_authenticated/metas")({
   head: () => ({
     meta: [
       { title: "Metas e desempenho — Residência Planner" },
