@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as ConteudosRouteImport } from './routes/conteudos'
+import { Route as MetasRouteImport } from './routes/metas'
+import { Route as PlannerRouteImport } from './routes/planner'
+import { Route as QuestoesRouteImport } from './routes/questoes'
+import { Route as RevisoesRouteImport } from './routes/revisoes'
+import { Route as SessoesRouteImport } from './routes/sessoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConteudosRoute = ConteudosRouteImport.update({
+  id: '/conteudos',
+  path: '/conteudos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetasRoute = MetasRouteImport.update({
+  id: '/metas',
+  path: '/metas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestoesRoute = QuestoesRouteImport.update({
+  id: '/questoes',
+  path: '/questoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevisoesRoute = RevisoesRouteImport.update({
+  id: '/revisoes',
+  path: '/revisoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessoesRoute = SessoesRouteImport.update({
+  id: '/sessoes',
+  path: '/sessoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/conteudos': typeof ConteudosRoute
+  '/metas': typeof MetasRoute
+  '/planner': typeof PlannerRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/conteudos': typeof ConteudosRoute
+  '/metas': typeof MetasRoute
+  '/planner': typeof PlannerRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/conteudos': typeof ConteudosRoute
+  '/metas': typeof MetasRoute
+  '/planner': typeof PlannerRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/conteudos'
+    | '/metas'
+    | '/planner'
+    | '/questoes'
+    | '/revisoes'
+    | '/sessoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/conteudos'
+    | '/metas'
+    | '/planner'
+    | '/questoes'
+    | '/revisoes'
+    | '/sessoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/conteudos'
+    | '/metas'
+    | '/planner'
+    | '/questoes'
+    | '/revisoes'
+    | '/sessoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  ConteudosRoute: typeof ConteudosRoute
+  MetasRoute: typeof MetasRoute
+  PlannerRoute: typeof PlannerRoute
+  QuestoesRoute: typeof QuestoesRoute
+  RevisoesRoute: typeof RevisoesRoute
+  SessoesRoute: typeof SessoesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +143,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conteudos': {
+      id: '/conteudos'
+      path: '/conteudos'
+      fullPath: '/conteudos'
+      preLoaderRoute: typeof ConteudosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metas': {
+      id: '/metas'
+      path: '/metas'
+      fullPath: '/metas'
+      preLoaderRoute: typeof MetasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questoes': {
+      id: '/questoes'
+      path: '/questoes'
+      fullPath: '/questoes'
+      preLoaderRoute: typeof QuestoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revisoes': {
+      id: '/revisoes'
+      path: '/revisoes'
+      fullPath: '/revisoes'
+      preLoaderRoute: typeof RevisoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sessoes': {
+      id: '/sessoes'
+      path: '/sessoes'
+      fullPath: '/sessoes'
+      preLoaderRoute: typeof SessoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  ConteudosRoute: ConteudosRoute,
+  MetasRoute: MetasRoute,
+  PlannerRoute: PlannerRoute,
+  QuestoesRoute: QuestoesRoute,
+  RevisoesRoute: RevisoesRoute,
+  SessoesRoute: SessoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
