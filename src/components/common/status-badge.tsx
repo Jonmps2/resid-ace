@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import type { StatusMeta } from "@/lib/mock-data";
+
+export type StatusMeta = "concluido" | "pendente" | "atrasado";
 
 const styles: Record<StatusMeta, string> = {
   concluido: "bg-success-soft text-success",

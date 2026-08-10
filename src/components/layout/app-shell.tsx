@@ -71,9 +71,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="rounded-xl bg-primary-soft p-3 text-xs text-secondary-foreground">
-          Dados de demonstração. Conecte o backend para salvar seu progresso.
-        </div>
+        <Link
+          to="/configuracoes"
+          className="rounded-xl bg-primary-soft p-3 text-xs font-medium text-secondary-foreground"
+        >
+          Conta e preferências
+        </Link>
       </aside>
 
       <div className="lg:pl-64">
