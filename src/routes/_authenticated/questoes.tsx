@@ -50,7 +50,7 @@ export const Route = createFileRoute("/_authenticated/questoes")({
       },
     ],
   }),
-  component: Questoes;
+  component: Questoes,
 });
 
 function Questoes() {
