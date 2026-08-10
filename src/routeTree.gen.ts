@@ -10,17 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ConteudosRouteImport } from './routes/conteudos'
 import { Route as MetasRouteImport } from './routes/metas'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as QuestoesRouteImport } from './routes/questoes'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RevisoesRouteImport } from './routes/revisoes'
 import { Route as SessoesRouteImport } from './routes/sessoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
@@ -48,6 +55,11 @@ const QuestoesRoute = QuestoesRouteImport.update({
   path: '/questoes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RevisoesRoute = RevisoesRouteImport.update({
   id: '/revisoes',
   path: '/revisoes',
@@ -61,32 +73,38 @@ const SessoesRoute = SessoesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conteudos': typeof ConteudosRoute
   '/metas': typeof MetasRoute
   '/planner': typeof PlannerRoute
   '/questoes': typeof QuestoesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/revisoes': typeof RevisoesRoute
   '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conteudos': typeof ConteudosRoute
   '/metas': typeof MetasRoute
   '/planner': typeof PlannerRoute
   '/questoes': typeof QuestoesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/revisoes': typeof RevisoesRoute
   '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conteudos': typeof ConteudosRoute
   '/metas': typeof MetasRoute
   '/planner': typeof PlannerRoute
   '/questoes': typeof QuestoesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/revisoes': typeof RevisoesRoute
   '/sessoes': typeof SessoesRoute
 }
@@ -94,42 +112,50 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/configuracoes'
     | '/conteudos'
     | '/metas'
     | '/planner'
     | '/questoes'
+    | '/reset-password'
     | '/revisoes'
     | '/sessoes'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/configuracoes'
     | '/conteudos'
     | '/metas'
     | '/planner'
     | '/questoes'
+    | '/reset-password'
     | '/revisoes'
     | '/sessoes'
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/configuracoes'
     | '/conteudos'
     | '/metas'
     | '/planner'
     | '/questoes'
+    | '/reset-password'
     | '/revisoes'
     | '/sessoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ConteudosRoute: typeof ConteudosRoute
   MetasRoute: typeof MetasRoute
   PlannerRoute: typeof PlannerRoute
   QuestoesRoute: typeof QuestoesRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RevisoesRoute: typeof RevisoesRoute
   SessoesRoute: typeof SessoesRoute
 }
@@ -141,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configuracoes': {
@@ -178,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestoesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/revisoes': {
       id: '/revisoes'
       path: '/revisoes'
@@ -197,11 +237,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ConteudosRoute: ConteudosRoute,
   MetasRoute: MetasRoute,
   PlannerRoute: PlannerRoute,
   QuestoesRoute: QuestoesRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   RevisoesRoute: RevisoesRoute,
   SessoesRoute: SessoesRoute,
 }
