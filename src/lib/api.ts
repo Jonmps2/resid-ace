@@ -52,7 +52,7 @@ export const queryKeys = {
 
 export async function bootstrapUser(fullName?: string | null) {
   const { error } = await supabase.rpc("bootstrap_current_user", {
-    p_full_name: fullName ?? null,
+    ...(fullName ? { p_full_name: fullName } : {}),
   });
   if (error) throw new Error(friendlyDbError(error));
 }
