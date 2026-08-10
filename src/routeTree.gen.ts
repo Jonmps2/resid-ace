@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConteudosRouteImport } from './routes/conteudos'
+import { Route as QuestoesRouteImport } from './routes/questoes'
+import { Route as RevisoesRouteImport } from './routes/revisoes'
+import { Route as SessoesRouteImport } from './routes/sessoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConteudosRoute = ConteudosRouteImport.update({
+  id: '/conteudos',
+  path: '/conteudos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestoesRoute = QuestoesRouteImport.update({
+  id: '/questoes',
+  path: '/questoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevisoesRoute = RevisoesRouteImport.update({
+  id: '/revisoes',
+  path: '/revisoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessoesRoute = SessoesRouteImport.update({
+  id: '/sessoes',
+  path: '/sessoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/conteudos': typeof ConteudosRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/conteudos': typeof ConteudosRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/conteudos': typeof ConteudosRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/sessoes': typeof SessoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/conteudos' | '/questoes' | '/revisoes' | '/sessoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/conteudos' | '/questoes' | '/revisoes' | '/sessoes'
+  id: '__root__' | '/' | '/conteudos' | '/questoes' | '/revisoes' | '/sessoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConteudosRoute: typeof ConteudosRoute
+  QuestoesRoute: typeof QuestoesRoute
+  RevisoesRoute: typeof RevisoesRoute
+  SessoesRoute: typeof SessoesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/conteudos': {
+      id: '/conteudos'
+      path: '/conteudos'
+      fullPath: '/conteudos'
+      preLoaderRoute: typeof ConteudosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questoes': {
+      id: '/questoes'
+      path: '/questoes'
+      fullPath: '/questoes'
+      preLoaderRoute: typeof QuestoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revisoes': {
+      id: '/revisoes'
+      path: '/revisoes'
+      fullPath: '/revisoes'
+      preLoaderRoute: typeof RevisoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sessoes': {
+      id: '/sessoes'
+      path: '/sessoes'
+      fullPath: '/sessoes'
+      preLoaderRoute: typeof SessoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConteudosRoute: ConteudosRoute,
+  QuestoesRoute: QuestoesRoute,
+  RevisoesRoute: RevisoesRoute,
+  SessoesRoute: SessoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
