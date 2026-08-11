@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/select";
 import { createTopic, deleteTopic, listAreas, listTopics, queryKeys, updateTopic } from "@/lib/api";
 import { percent } from "@/lib/format";
+import { topicStatusLabels } from "@/lib/topic-meta";
+
 import type { Enums } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/conteudos")({
@@ -48,12 +50,8 @@ export const Route = createFileRoute("/_authenticated/conteudos")({
   component: Conteudos,
 });
 
-const statusLabels: Record<Enums<"topic_status">, string> = {
-  nao_iniciado: "Não iniciado",
-  em_andamento: "Em andamento",
-  concluido: "Concluído",
-  revisar: "Revisar",
-};
+const statusLabels = topicStatusLabels;
+
 
 function Conteudos() {
   const qc = useQueryClient();

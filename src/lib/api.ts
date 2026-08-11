@@ -90,6 +90,26 @@ export async function deleteSubject(id: string) {
   if (error) throw new Error(friendlyDbError(error));
 }
 
+/** Encontra a subárea pelo nome dentro da grande área ou cria uma nova. */
+export async function findOrCreateSubject(
+  areaId: string,
+  name: string,
+): Promise<Subject | null> {
+  const clean = name.trim();
+  if (!clean) return null;
+  const { data, error } = await supabase
+    .from("subjects")
+    .select("*")
+    .eq("area_id", areaId)
+    .ilike("name", clean)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(friendlyDbError(error));
+  if (data) return data;
+  return createSubject({ area_id: areaId, name: clean });
+}
+
+
 /* ---------- tópicos ---------- */
 
 export async function listTopics(): Promise<Topic[]> {
@@ -152,10 +172,17 @@ export async function createQuestionSession(
   );
 }
 
+export async function updateQuestionSession(id: string, patch: TablesUpdate<"question_sessions">) {
+  return unwrap(
+    await supabase.from("question_sessions").update(patch).eq("id", id).select().single(),
+  );
+}
+
 export async function deleteQuestionSession(id: string) {
   const { error } = await supabase.from("question_sessions").delete().eq("id", id);
   if (error) throw new Error(friendlyDbError(error));
 }
+
 
 /* ---------- revisões ---------- */
 
@@ -163,10 +190,15 @@ export async function listReviews(): Promise<Review[]> {
   return unwrap(await supabase.from("reviews").select("*").order("scheduled_for"));
 }
 
-export async function createReview(input: Omit<TablesInsert<"reviews">, "user_id">) {
+export async function createReview(
+  input: Omit<TablesInsert<"reviews">, "user_id">,
+): Promise<Review> {
   const user_id = await requireUserId();
-  return unwrap(await supabase.from("reviews").insert({ ...input, user_id }).select().single());
+  return unwrap<Review>(
+    await supabase.from("reviews").insert({ ...input, user_id }).select().single(),
+  );
 }
+
 
 export async function updateReview(id: string, patch: TablesUpdate<"reviews">) {
   return unwrap(await supabase.from("reviews").update(patch).eq("id", id).select().single());
@@ -184,6 +216,53 @@ export async function listReviewRules(): Promise<ReviewRule[]> {
 export async function updateReviewRule(id: string, patch: TablesUpdate<"review_rules">) {
   return unwrap(await supabase.from("review_rules").update(patch).eq("id", id).select().single());
 }
+
+export async function createReviewRule(input: Omit<TablesInsert<"review_rules">, "user_id">) {
+  const user_id = await requireUserId();
+  return unwrap(
+    await supabase.from("review_rules").insert({ ...input, user_id }).select().single(),
+  );
+}
+
+/** Revisão pendente/atrasada de um conteúdo, se existir. */
+export async function findOpenReview(topicId: string): Promise<Review | null> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("topic_id", topicId)
+    .in("status", ["pendente", "atrasada"])
+    .order("scheduled_for")
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(friendlyDbError(error));
+  return data;
+}
+
+/** Cria uma revisão apenas quando não existe outra em aberto para o conteúdo. */
+export async function ensureReview(
+  topicId: string,
+  input: Omit<TablesInsert<"reviews">, "user_id" | "topic_id">,
+): Promise<Review> {
+  const existing = await findOpenReview(topicId);
+  if (existing) return existing;
+  return createReview({ ...input, topic_id: topicId });
+}
+
+/* ---------- criação em lote (importação CSV / currículo) ---------- */
+
+export async function createTopicsBulk(
+  rows: Array<Omit<TablesInsert<"topics">, "user_id">>,
+): Promise<Topic[]> {
+  if (rows.length === 0) return [];
+  const user_id = await requireUserId();
+  return unwrap(
+    await supabase
+      .from("topics")
+      .insert(rows.map((r) => ({ ...r, user_id })))
+      .select(),
+  );
+}
+
 
 /* ---------- planner ---------- */
 

@@ -166,6 +166,8 @@ export type Database = {
           area_id: string | null
           correct_count: number
           created_at: string
+          duration_minutes: number | null
+          exam_board: string | null
           id: string
           notes: string | null
           performed_at: string
@@ -175,6 +177,7 @@ export type Database = {
           total_questions: number
           updated_at: string
           user_id: string
+          void_count: number
           wrong_count: number | null
         }
         Insert: {
@@ -182,6 +185,8 @@ export type Database = {
           area_id?: string | null
           correct_count?: number
           created_at?: string
+          duration_minutes?: number | null
+          exam_board?: string | null
           id?: string
           notes?: string | null
           performed_at?: string
@@ -191,6 +196,7 @@ export type Database = {
           total_questions: number
           updated_at?: string
           user_id: string
+          void_count?: number
           wrong_count?: number | null
         }
         Update: {
@@ -198,6 +204,8 @@ export type Database = {
           area_id?: string | null
           correct_count?: number
           created_at?: string
+          duration_minutes?: number | null
+          exam_board?: string | null
           id?: string
           notes?: string | null
           performed_at?: string
@@ -207,6 +215,7 @@ export type Database = {
           total_questions?: number
           updated_at?: string
           user_id?: string
+          void_count?: number
           wrong_count?: number | null
         }
         Relationships: [
@@ -264,10 +273,17 @@ export type Database = {
       }
       reviews: {
         Row: {
+          change_origin: string | null
           completed_at: string | null
           created_at: string
+          duration_minutes: number | null
           id: string
+          mastery_level: number | null
+          method: string | null
           notes: string | null
+          previous_scheduled_for: string | null
+          questions_correct: number | null
+          questions_total: number | null
           result: Database["public"]["Enums"]["review_result"] | null
           review_number: number
           rule_id: string | null
@@ -279,10 +295,17 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          change_origin?: string | null
           completed_at?: string | null
           created_at?: string
+          duration_minutes?: number | null
           id?: string
+          mastery_level?: number | null
+          method?: string | null
           notes?: string | null
+          previous_scheduled_for?: string | null
+          questions_correct?: number | null
+          questions_total?: number | null
           result?: Database["public"]["Enums"]["review_result"] | null
           review_number?: number
           rule_id?: string | null
@@ -294,10 +317,17 @@ export type Database = {
           user_id: string
         }
         Update: {
+          change_origin?: string | null
           completed_at?: string | null
           created_at?: string
+          duration_minutes?: number | null
           id?: string
+          mastery_level?: number | null
+          method?: string | null
           notes?: string | null
+          previous_scheduled_for?: string | null
+          questions_correct?: number | null
+          questions_total?: number | null
           result?: Database["public"]["Enums"]["review_result"] | null
           review_number?: number
           rule_id?: string | null
@@ -461,49 +491,64 @@ export type Database = {
       }
       topics: {
         Row: {
+          archived_at: string | null
           area_id: string | null
           completed_at: string | null
           created_at: string
           description: string | null
           estimated_minutes: number | null
           id: string
+          importance: Database["public"]["Enums"]["topic_importance"]
+          mastery_level: number | null
           notes: string | null
           planned_date: string | null
           priority: Database["public"]["Enums"]["topic_priority"]
+          source: string | null
           status: Database["public"]["Enums"]["topic_status"]
           subject_id: string | null
+          tags: string[]
           title: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          archived_at?: string | null
           area_id?: string | null
           completed_at?: string | null
           created_at?: string
           description?: string | null
           estimated_minutes?: number | null
           id?: string
+          importance?: Database["public"]["Enums"]["topic_importance"]
+          mastery_level?: number | null
           notes?: string | null
           planned_date?: string | null
           priority?: Database["public"]["Enums"]["topic_priority"]
+          source?: string | null
           status?: Database["public"]["Enums"]["topic_status"]
           subject_id?: string | null
+          tags?: string[]
           title: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          archived_at?: string | null
           area_id?: string | null
           completed_at?: string | null
           created_at?: string
           description?: string | null
           estimated_minutes?: number | null
           id?: string
+          importance?: Database["public"]["Enums"]["topic_importance"]
+          mastery_level?: number | null
           notes?: string | null
           planned_date?: string | null
           priority?: Database["public"]["Enums"]["topic_priority"]
+          source?: string | null
           status?: Database["public"]["Enums"]["topic_status"]
           subject_id?: string | null
+          tags?: string[]
           title?: string
           updated_at?: string
           user_id?: string
@@ -541,7 +586,7 @@ export type Database = {
       goal_metric: "horas" | "questoes" | "topicos" | "revisoes" | "acertos"
       goal_period: "diario" | "semanal" | "mensal"
       review_result: "ruim" | "regular" | "bom" | "otimo"
-      review_rule_mode: "fixo" | "desempenho"
+      review_rule_mode: "fixo" | "desempenho" | "hibrida"
       review_status: "pendente" | "concluida" | "atrasada" | "cancelada"
       session_status: "planejada" | "em_andamento" | "concluida" | "cancelada"
       study_type:
@@ -551,8 +596,18 @@ export type Database = {
         | "resumo"
         | "aula"
         | "flashcards"
+        | "videoaula"
+        | "leitura"
+        | "outro"
+      topic_importance: "alta" | "media" | "baixa"
       topic_priority: "P1" | "P2" | "P3" | "P4"
-      topic_status: "nao_iniciado" | "em_andamento" | "concluido" | "revisar"
+      topic_status:
+        | "nao_iniciado"
+        | "em_andamento"
+        | "concluido"
+        | "revisar"
+        | "estudado"
+        | "dominado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -685,7 +740,7 @@ export const Constants = {
       goal_metric: ["horas", "questoes", "topicos", "revisoes", "acertos"],
       goal_period: ["diario", "semanal", "mensal"],
       review_result: ["ruim", "regular", "bom", "otimo"],
-      review_rule_mode: ["fixo", "desempenho"],
+      review_rule_mode: ["fixo", "desempenho", "hibrida"],
       review_status: ["pendente", "concluida", "atrasada", "cancelada"],
       session_status: ["planejada", "em_andamento", "concluida", "cancelada"],
       study_type: [
@@ -695,9 +750,20 @@ export const Constants = {
         "resumo",
         "aula",
         "flashcards",
+        "videoaula",
+        "leitura",
+        "outro",
       ],
+      topic_importance: ["alta", "media", "baixa"],
       topic_priority: ["P1", "P2", "P3", "P4"],
-      topic_status: ["nao_iniciado", "em_andamento", "concluido", "revisar"],
+      topic_status: [
+        "nao_iniciado",
+        "em_andamento",
+        "concluido",
+        "revisar",
+        "estudado",
+        "dominado",
+      ],
     },
   },
 } as const
