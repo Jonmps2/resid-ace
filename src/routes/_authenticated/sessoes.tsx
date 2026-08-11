@@ -61,7 +61,11 @@ const typeLabels: Record<Enums<"study_type">, string> = {
   resumo: "Resumo",
   aula: "Aula",
   flashcards: "Flashcards",
+  videoaula: "Videoaula",
+  leitura: "Leitura",
+  outro: "Outro",
 };
+
 
 function Sessoes() {
   const qc = useQueryClient();
