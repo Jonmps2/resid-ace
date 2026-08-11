@@ -192,6 +192,53 @@ export async function updateReviewRule(id: string, patch: TablesUpdate<"review_r
   return unwrap(await supabase.from("review_rules").update(patch).eq("id", id).select().single());
 }
 
+export async function createReviewRule(input: Omit<TablesInsert<"review_rules">, "user_id">) {
+  const user_id = await requireUserId();
+  return unwrap(
+    await supabase.from("review_rules").insert({ ...input, user_id }).select().single(),
+  );
+}
+
+/** Revisão pendente/atrasada de um conteúdo, se existir. */
+export async function findOpenReview(topicId: string): Promise<Review | null> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("topic_id", topicId)
+    .in("status", ["pendente", "atrasada"])
+    .order("scheduled_for")
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(friendlyDbError(error));
+  return data;
+}
+
+/** Cria uma revisão apenas quando não existe outra em aberto para o conteúdo. */
+export async function ensureReview(
+  topicId: string,
+  input: Omit<TablesInsert<"reviews">, "user_id" | "topic_id">,
+): Promise<Review> {
+  const existing = await findOpenReview(topicId);
+  if (existing) return existing;
+  return createReview({ ...input, topic_id: topicId });
+}
+
+/* ---------- criação em lote (importação CSV / currículo) ---------- */
+
+export async function createTopicsBulk(
+  rows: Array<Omit<TablesInsert<"topics">, "user_id">>,
+): Promise<Topic[]> {
+  if (rows.length === 0) return [];
+  const user_id = await requireUserId();
+  return unwrap(
+    await supabase
+      .from("topics")
+      .insert(rows.map((r) => ({ ...r, user_id })))
+      .select(),
+  );
+}
+
+
 /* ---------- planner ---------- */
 
 export async function listPlannerEvents(): Promise<PlannerEvent[]> {
