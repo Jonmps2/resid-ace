@@ -170,10 +170,15 @@ export async function listReviews(): Promise<Review[]> {
   return unwrap(await supabase.from("reviews").select("*").order("scheduled_for"));
 }
 
-export async function createReview(input: Omit<TablesInsert<"reviews">, "user_id">) {
+export async function createReview(
+  input: Omit<TablesInsert<"reviews">, "user_id">,
+): Promise<Review> {
   const user_id = await requireUserId();
-  return unwrap(await supabase.from("reviews").insert({ ...input, user_id }).select().single());
+  return unwrap<Review>(
+    await supabase.from("reviews").insert({ ...input, user_id }).select().single(),
+  );
 }
+
 
 export async function updateReview(id: string, patch: TablesUpdate<"reviews">) {
   return unwrap(await supabase.from("reviews").update(patch).eq("id", id).select().single());
