@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/select";
 import { createTopic, deleteTopic, listAreas, listTopics, queryKeys, updateTopic } from "@/lib/api";
 import { percent } from "@/lib/format";
+import { topicStatusLabels } from "@/lib/topic-meta";
+
 import type { Enums } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/conteudos")({
