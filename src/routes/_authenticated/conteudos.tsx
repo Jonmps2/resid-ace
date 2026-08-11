@@ -48,12 +48,8 @@ export const Route = createFileRoute("/_authenticated/conteudos")({
   component: Conteudos,
 });
 
-const statusLabels: Record<Enums<"topic_status">, string> = {
-  nao_iniciado: "Não iniciado",
-  em_andamento: "Em andamento",
-  concluido: "Concluído",
-  revisar: "Revisar",
-};
+const statusLabels = topicStatusLabels;
+
 
 function Conteudos() {
   const qc = useQueryClient();
