@@ -90,6 +90,26 @@ export async function deleteSubject(id: string) {
   if (error) throw new Error(friendlyDbError(error));
 }
 
+/** Encontra a subárea pelo nome dentro da grande área ou cria uma nova. */
+export async function findOrCreateSubject(
+  areaId: string,
+  name: string,
+): Promise<Subject | null> {
+  const clean = name.trim();
+  if (!clean) return null;
+  const { data, error } = await supabase
+    .from("subjects")
+    .select("*")
+    .eq("area_id", areaId)
+    .ilike("name", clean)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error(friendlyDbError(error));
+  if (data) return data;
+  return createSubject({ area_id: areaId, name: clean });
+}
+
+
 /* ---------- tópicos ---------- */
 
 export async function listTopics(): Promise<Topic[]> {
