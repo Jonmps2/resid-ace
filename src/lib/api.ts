@@ -152,10 +152,17 @@ export async function createQuestionSession(
   );
 }
 
+export async function updateQuestionSession(id: string, patch: TablesUpdate<"question_sessions">) {
+  return unwrap(
+    await supabase.from("question_sessions").update(patch).eq("id", id).select().single(),
+  );
+}
+
 export async function deleteQuestionSession(id: string) {
   const { error } = await supabase.from("question_sessions").delete().eq("id", id);
   if (error) throw new Error(friendlyDbError(error));
 }
+
 
 /* ---------- revisões ---------- */
 
